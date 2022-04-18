@@ -30,7 +30,13 @@ public sealed class Visualizer : MonoBehaviour
     {
         _detector = new FaceLandmarkDetector(_resources);
         _material = new Material(_shader);
+        
+        // Face landmark detection
+        _detector.ProcessImage(_webcam.Texture);
+		// UI update
+        _previewUI.texture = _webcam.Texture;
     }
+
 
     void OnDestroy()
     {
@@ -38,14 +44,14 @@ public sealed class Visualizer : MonoBehaviour
         Destroy(_material);
     }
 
-    void LateUpdate()
-    {
-        // Face landmark detection
-        _detector.ProcessImage(_webcam.Texture);
+    // void LateUpdate()
+    // {
+    //     // Face landmark detection
+    //     _detector.ProcessImage(_webcam.Texture);
 
-        // UI update
-        _previewUI.texture = _webcam.Texture;
-    }
+    //     // UI update
+    //     _previewUI.texture = _webcam.Texture;
+    // }
 
     void OnRenderObject()
     {
@@ -55,9 +61,13 @@ public sealed class Visualizer : MonoBehaviour
         Graphics.DrawMeshNow(_template, Matrix4x4.identity);
 
         // Keypoint marking
+        // _material.SetBuffer("_Vertices", _detector.VertexBuffer);
+        // _material.SetPass(0);  // 1
+        // Graphics.DrawProceduralNow(MeshTopology.Points, 468, 1);  // Lines
+
         _material.SetBuffer("_Vertices", _detector.VertexBuffer);
         _material.SetPass(1);
-        Graphics.DrawProceduralNow(MeshTopology.Lines, 400, 1);
+        Graphics.DrawProceduralNow(MeshTopology.Lines, 468, 1);
     }
 
     #endregion
